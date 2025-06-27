@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  app:
+    image: bitnami/laravel:11
+    container_name: laravel11-app
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_USERNAME=${DB_USERNAME:-laravel}
+      - DB_PASSWORD=${DB_PASSWORD:-root}
+      - DB_DATABASE=${DB_DATABASE:-laravel}
+    volumes:
+      - ./app:/app
+    depends_on:
+      - db
+      - mailhog
+    networks:
+      - laravel-network
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: laravel11-mailhog
+    ports:
+      - "1025:1025"  # SMTP server
+      - "8025:8025"  # Web interface
+    networks:
+      - laravel-network
+
+  db:
+    image: mysql:8.0
+    container_name: laravel11-db
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-laravel}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-root}
+      MYSQL_USER: ${DB_USERNAME:-laravel}
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    networks:
+      - laravel-network
+
+networks:
+  laravel-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
+    driver: local

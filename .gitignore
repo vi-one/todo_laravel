@@ -1,0 +1,7 @@
+/vendor
+/.env
+/.idea
+/app/node_modules
+/app/vendor
+/app/.env
+/app/app/google-calendar
