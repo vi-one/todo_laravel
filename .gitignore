@@ -1,5 +1,4 @@
 /vendor
-/.env
 /.idea
 /app/node_modules
 /app/vendor
